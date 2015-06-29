@@ -45,9 +45,17 @@ describe('Initialization', function(){
 
 describe('Configuring RFID Reader', function(){
 	
-	it('should allow the setting of _serialParse via the setOnSerialRead function');
+	it('should set the events.read function when setting the on("read")');
 	
-	it('should allow the setting of _onRFIDTokenRead via the setOnRFIDTokenRead function');
+	it('should throw an error if on("read") is not passed a function with two arguments (input, cb)');
+	
+	it('should throw an error if the "read" event is not set when listening');
+	
+	it('should not throw an error if the "read" event is set when listening');
+	
+	it('should set the events.serial function when setting the on("serial")');
+	
+	it('should throw an error if on("read") is not passed a function with two arguments (input, cb)');
 	
 });
 
@@ -66,6 +74,10 @@ describe('Open Connection', function(){
 		expect(function(){
 			var tmp = new RFIDReader(COM_PORT, 57600);
 			
+			tmp.on('read', function(){
+				
+			});
+			
 			tmp.listen();
 			
 		}).to.not.throw();
@@ -79,10 +91,16 @@ describe('Response from the RFID card', function(){
 	
 });
 
-describe('Serial Parsing');
-
-describe('Get RFID Token', function(){
-	it('should not call _onRFIDTokenRead if it is not set');
+describe('Serial Parsing', function(){
 	
-	it('should call _onRFIDTokenRead if it is set');
+	it('should call the on("serial") on a RFID card event');
+	
+	it('should, by default, parse a string and trim spaces / new line characters');
+	
+});
+
+describe('On RFID Token', function(){
+	
+	it('should call the read event on an RFID token read');
+	
 });
