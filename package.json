@@ -1,0 +1,21 @@
+{
+  "name": "serial-rfid-reader",
+  "version": "1.0.0",
+  "description": "A wrapper library to easily incorporate serial RFID readers (such as Sparkfun's 215khz, used for this lib) into a node program.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha --no-timeouts"
+  },
+  "keywords": [
+    "rfid"
+  ],
+  "author": "Keith Chester",
+  "license": "MIT",
+  "dependencies": {
+    "serialport": "^1.7.4"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5"
+  }
+}
