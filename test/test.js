@@ -47,9 +47,7 @@ describe('Configuring RFID Reader', function(){
 	
 	it('should allow the setting of _serialParse via the setOnSerialRead function');
 	
-	it('should allow the setting of _getViaRFIDToken via the setGetViaRFIDToken function');
-	
-	it('should allow the setting of _findRFIDToken via the setFindRFIDToken function');
+	it('should allow the setting of _onRFIDTokenRead via the setOnRFIDTokenRead function');
 	
 });
 
@@ -75,6 +73,16 @@ describe('Open Connection', function(){
 	
 });
 
-describe('Response from card reading', function(){
+describe('Response from the RFID card', function(){
 	
+	it('should react when a card is pressed against the reader');
+	
+});
+
+describe('Serial Parsing');
+
+describe('Get RFID Token', function(){
+	it('should not call _onRFIDTokenRead if it is not set');
+	
+	it('should call _onRFIDTokenRead if it is set');
 });
