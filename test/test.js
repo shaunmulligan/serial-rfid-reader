@@ -184,6 +184,18 @@ describe('Serial Parsing', function(){
 
 describe('On RFID Token', function(){
 	
-	it('should call the read event on an RFID token read');
+	it('should call the read event on an RFID token read', function(done){
+		console.log("Please use the card on the reader");
+		var reader = new RFIDReader(COM_PORT, 57600);
+		
+		reader.on('read', function(input){
+			expect(input).to.be.ok;
+			reader.disconnect();
+			done();
+		});
+		
+		reader.listen();
+		
+	});
 	
 });
