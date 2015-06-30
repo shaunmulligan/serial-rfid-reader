@@ -113,7 +113,7 @@ describe('Open Connection', function(){
 		}).to.throw();
 	});
 	
-	it('should open a connection and not throw any errors if the serial port connection can be opened', function(){
+	it('should open a connection and not throw any errors if the serial port connection can be opened', function(done){
 		expect(function(){
 			var tmp = new RFIDReader(COM_PORT, 57600);
 			
@@ -124,21 +124,61 @@ describe('Open Connection', function(){
 			tmp.listen();
 			
 		}).to.not.throw();
+		setTimeout(function(){
+			tmp.disconnect();
+			done();
+		}, 1000);
 	});
 	
 });
 
 describe('Response from the RFID card', function(){
 	
-	it('should react when a card is pressed against the reader');
+	it('should react when a card is pressed against the reader', function(done){
+		console.log("Please use the card on the reader.");
+		var reader = new RFIDReader(COM_PORT, 57600);
+		
+		reader.on('read', function(input){
+			expect(input).to.be.ok;
+			reader.disconnect();
+			done();
+		});
+		
+		reader.listen();
+		
+	});
 	
 });
 
 describe('Serial Parsing', function(){
 	
-	it('should call the on("serial") on a RFID card event');
+	it('should call the on("serial") on a RFID card event', function(done){
+		console.log("Please use the card on the reader");
+		var reader = new RFIDReader(COM_PORT, 57600);
+		
+		reader.on('serial', function(input, cb){
+			expect.to.be.ok;
+			reader.disconnect();
+			done();
+		});
+		
+		reader.on('read', function(input){
+			
+		});
+		
+		reader.listen();
+		
+	});
 	
-	it('should, by default, parse a string and trim spaces / new line characters');
+	it('should, by default, parse a string and trim spaces / new line characters', function(done){
+		var tmp = new RFIDReader(COM_PORT, 57600);
+		
+		tmp.events.serial(' abcdefgh_5 ', function(err, parsed){
+			expect(err).to.be.null;
+			expect(parsed).to.be.equal('abcdefgh_5');
+			done();
+		});
+	});
 	
 });
 
