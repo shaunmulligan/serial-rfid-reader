@@ -150,19 +150,21 @@ describe('Open Connection', function(){
 	
 	it('should open a connection and not throw any errors if the serial port connection can be opened', function(done){
 		expect(function(){
-			var tmp = new RFIDReader(COM_PORT, 57600);
+			var tmp = new RFIDReader(COM_PORT, 9600);
 			
 			tmp.on('read', function(result){
 				
 			});
 			
-			tmp.listen();
+			tmp.listen(function(err){
+				expect(err).to.be.null;
+				tmp.close(function(err){
+					console.log("Error closing serial port: ", err);
+					done();
+				});
+			});
 			
 		}).to.not.throw();
-		setTimeout(function(){
-			tmp.close();
-			done();
-		}, 1000);
 	});
 	
 	it('should, if the "open event" is defined, call the open event on a successful serial port connection', function(done){
@@ -174,12 +176,17 @@ describe('Open Connection', function(){
 			});
 			
 			tmp.on('open', function(){
-				expect.to.be.ok;
-				tmp.close();
-				done();
+				expect.ok;
+				tmp.close(function(err){
+					console.log("Error closing serial port: ", err);
+					done();
+				});
 			});
 			
-			tmp.listen();
+			tmp.listen(function(err){
+				expect(err).to.be.null;
+				if(err) done();
+			});
 			
 		}).to.not.throw();
 	});
@@ -190,12 +197,14 @@ describe('Response from the RFID card', function(){
 	
 	it('should react when a card is pressed against the reader', function(done){
 		console.log("Please use the card on the reader.");
-		var reader = new RFIDReader(COM_PORT, 57600);
+		var reader = new RFIDReader(COM_PORT, 9600);
 		
 		reader.on('read', function(input){
 			expect(input).to.be.ok;
-			reader.close();
-			done();
+			reader.close(function(err){
+				if(err) console.log("Error closing serial port: ", err);
+				done();
+			});
 		});
 		
 		reader.listen();
@@ -212,7 +221,7 @@ describe('Serial Parsing', function(){
 		
 		reader.on('serial', function(input, cb){
 			expect.to.be.ok;
-			reader.close();
+			reader.close(function(err){ console.log("Error closing serial port: ", err); });
 			done();
 		});
 		
@@ -244,7 +253,7 @@ describe('On RFID Token', function(){
 		
 		reader.on('read', function(input){
 			expect(input).to.be.ok;
-			reader.close();
+			reader.close(function(err){ console.log("Error closing serial port: ", err); });
 			done();
 		});
 		
