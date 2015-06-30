@@ -103,6 +103,38 @@ describe('Configuring RFID Reader', function(){
 		}).to.throw();
 	});
 	
+	it('should set events.open when setting the on("open")', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		expect(tmp.events.open).to.be.null;
+		tmp.on('open', function(err, results){});
+		expect(tmp.events.open).to.be.ok;
+	});
+	
+	it('should throw an error if on("open") is not passed a function with two arguments (err, results)', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		expect(function(){
+			tmp.on("open", function(fake){
+				
+			});
+		}).to.throw();
+	});
+	
+	it('should only allow you to set an "on" event for serial, open, and read', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		expect(function(){
+			tmp.on('serial', function(input, cb){});
+		}).to.not.throw();
+		expect(function(){
+			tmp.on('read', function(input){});
+		}).to.not.throw();
+		expect(function(){
+			tmp.on('open', function(input, cb){});
+		}).to.not.throw();
+		expect(function(){
+			tmp.on('fake', function(){});
+		}).to.throw();
+	});
+	
 });
 
 describe('Open Connection', function(){
