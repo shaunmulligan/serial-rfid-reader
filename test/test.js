@@ -74,7 +74,6 @@ describe('Configuring RFID Reader', function(){
 	
 	it('should throw an error if the "read" event is not set when listening', function(){
 		var tmp = new RFIDReader('fake', 57600);
-		
 		expect(function(){
 			tmp.listen();
 		}).to.throw();
