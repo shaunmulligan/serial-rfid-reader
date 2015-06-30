@@ -173,7 +173,7 @@ describe('Open Connection', function(){
 				
 			});
 			
-			tmp.on('open', function(err, results){
+			tmp.on('open', function(){
 				expect.to.be.ok;
 				tmp.close();
 				done();
