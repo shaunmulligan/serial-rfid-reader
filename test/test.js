@@ -152,7 +152,7 @@ describe('Open Connection', function(){
 		expect(function(){
 			var tmp = new RFIDReader(COM_PORT, 57600);
 			
-			tmp.on('read', function(){
+			tmp.on('read', function(result){
 				
 			});
 			
@@ -169,7 +169,7 @@ describe('Open Connection', function(){
 		expect(function(){
 			var tmp = new RFIDReader(COM_PORT, 57600);
 			
-			tmp.on('read', function(){
+			tmp.on('read', function(result){
 				
 			});
 			
