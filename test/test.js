@@ -1,7 +1,11 @@
 var expect = require('chai').expect,
 	RFIDReader = require('../index.js');
 	
-var COM_PORT = 'test';
+var COM_PORT = process.env.COM_PORT;
+
+if(!COM_PORT){
+	throw new Error('You must set the COM port via the environment variable COM_PORT to continue');
+}
 	
 console.log("Many of these tests require an open connection to an RFID reader as determined by the --port= argument.");
 
