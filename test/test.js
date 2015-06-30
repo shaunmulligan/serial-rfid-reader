@@ -106,11 +106,11 @@ describe('Configuring RFID Reader', function(){
 	it('should set events.open when setting the on("open")', function(){
 		var tmp = new RFIDReader('fake', 57600);
 		expect(tmp.events.open).to.be.null;
-		tmp.on('open', function(err, results){});
+		tmp.on('open', function(){});
 		expect(tmp.events.open).to.be.ok;
 	});
 	
-	it('should throw an error if on("open") is not passed a function with two arguments (err, results)', function(){
+	it('should throw an error if on("open") is not passed a function with no arguments', function(){
 		var tmp = new RFIDReader('fake', 57600);
 		expect(function(){
 			tmp.on("open", function(fake){
@@ -128,7 +128,7 @@ describe('Configuring RFID Reader', function(){
 			tmp.on('read', function(input){});
 		}).to.not.throw();
 		expect(function(){
-			tmp.on('open', function(input, cb){});
+			tmp.on('open', function(){});
 		}).to.not.throw();
 		expect(function(){
 			tmp.on('fake', function(){});
@@ -160,9 +160,28 @@ describe('Open Connection', function(){
 			
 		}).to.not.throw();
 		setTimeout(function(){
-			tmp.disconnect();
+			tmp.close();
 			done();
 		}, 1000);
+	});
+	
+	it('should, if the "open event" is defined, call the open event on a successful serial port connection', function(done){
+		expect(function(){
+			var tmp = new RFIDReader(COM_PORT, 57600);
+			
+			tmp.on('read', function(){
+				
+			});
+			
+			tmp.on('open', function(err, results){
+				expect.to.be.ok;
+				tmp.close();
+				done();
+			});
+			
+			tmp.listen();
+			
+		}).to.not.throw();
 	});
 	
 });
@@ -175,7 +194,7 @@ describe('Response from the RFID card', function(){
 		
 		reader.on('read', function(input){
 			expect(input).to.be.ok;
-			reader.disconnect();
+			reader.close();
 			done();
 		});
 		
@@ -193,7 +212,7 @@ describe('Serial Parsing', function(){
 		
 		reader.on('serial', function(input, cb){
 			expect.to.be.ok;
-			reader.disconnect();
+			reader.close();
 			done();
 		});
 		
@@ -225,7 +244,7 @@ describe('On RFID Token', function(){
 		
 		reader.on('read', function(input){
 			expect(input).to.be.ok;
-			reader.disconnect();
+			reader.close();
 			done();
 		});
 		
