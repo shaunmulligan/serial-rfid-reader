@@ -45,17 +45,60 @@ describe('Initialization', function(){
 
 describe('Configuring RFID Reader', function(){
 	
-	it('should set the events.read function when setting the on("read")');
+	it('should set the events.read function when setting the on("read")', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		expect(tmp.events.read).to.be.null;
+		
+		tmp.on('read', function(input){
+			
+		});
+		
+		expect(tmp.events.read).to.be.ok;
+	});
 	
-	it('should throw an error if on("read") is not passed a function with two arguments (input, cb)');
+	it('should throw an error if on("read") is not passed a function with one argument (input)', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		
+		expect(function(){
+			
+			tmp.on('read', function(){
+				
+			});
+			
+		}).to.throw();
+	});
 	
-	it('should throw an error if the "read" event is not set when listening');
+	it('should throw an error if the "read" event is not set when listening', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		
+		expect(function(){
+			tmp.listen();
+		}).to.throw();
+	});
 	
-	it('should not throw an error if the "read" event is set when listening');
+	it('should set the events.serial function when setting the on("serial")', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		
+		tmp.events.serial = null;
+		
+		expect(tmp.events.serial).to.be.null;
+		
+		tmp.on('serial', function(a, b){
+			
+		});
+		
+		expect(tmp.events.serial).to.be.ok;
+	});
 	
-	it('should set the events.serial function when setting the on("serial")');
-	
-	it('should throw an error if on("read") is not passed a function with two arguments (input, cb)');
+	it('should throw an error if on("serial") is not passed a function with two arguments (input, cb)', function(){
+		var tmp = new RFIDReader('fake', 57600);
+		
+		expect(function(){
+			tmp.on('serial', function(a){
+				
+			});
+		}).to.throw();
+	});
 	
 });
 
