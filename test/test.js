@@ -13,7 +13,7 @@ describe('Initialization', function(){
 	
 	it('should allow a string an object with a baudrate attribute to pass', function(){
 		expect(function(){
-			var tmp = new RFIDReader('something', { baudrate: 57600 });
+			var tmp = new RFIDReader('something', { baudrate: 9600 });
 		}).to.not.throw();
 	});
 	
@@ -29,7 +29,7 @@ describe('Initialization', function(){
 	
 	it('should allow you to pass a number for baudrate for initialization', function(){
 		expect(function(){
-			var tmp = new RFIDReader('something', 57600);
+			var tmp = new RFIDReader('something', 9600);
 		}).to.not.throw();
 	});
 	
@@ -41,7 +41,7 @@ describe('Initialization', function(){
 	
 	it('should throw an error if the port is not a string', function(){
 		expect(function(){
-			var tmp = new RFIDReader({ test: 'fake'}, { baudrate: 57600 });
+			var tmp = new RFIDReader({ test: 'fake'}, { baudrate: 9600 });
 		}).to.throw();
 	});
 	
@@ -50,7 +50,7 @@ describe('Initialization', function(){
 describe('Configuring RFID Reader', function(){
 	
 	it('should set the events.read function when setting the on("read")', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		expect(tmp.events.read).to.be.null;
 		
 		tmp.on('read', function(input){
@@ -61,7 +61,7 @@ describe('Configuring RFID Reader', function(){
 	});
 	
 	it('should throw an error if on("read") is not passed a function with one argument (input)', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		
 		expect(function(){
 			
@@ -73,14 +73,14 @@ describe('Configuring RFID Reader', function(){
 	});
 	
 	it('should throw an error if the "read" event is not set when listening', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		expect(function(){
 			tmp.listen();
 		}).to.throw();
 	});
 	
 	it('should set the events.serial function when setting the on("serial")', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		
 		tmp.events.serial = null;
 		
@@ -94,7 +94,7 @@ describe('Configuring RFID Reader', function(){
 	});
 	
 	it('should throw an error if on("serial") is not passed a function with two arguments (input, cb)', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		
 		expect(function(){
 			tmp.on('serial', function(a){
@@ -104,14 +104,14 @@ describe('Configuring RFID Reader', function(){
 	});
 	
 	it('should set events.open when setting the on("open")', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		expect(tmp.events.open).to.be.null;
 		tmp.on('open', function(){});
 		expect(tmp.events.open).to.be.ok;
 	});
 	
 	it('should throw an error if on("open") is not passed a function with no arguments', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		expect(function(){
 			tmp.on("open", function(fake){
 				
@@ -120,7 +120,7 @@ describe('Configuring RFID Reader', function(){
 	});
 	
 	it('should only allow you to set an "on" event for serial, open, and read', function(){
-		var tmp = new RFIDReader('fake', 57600);
+		var tmp = new RFIDReader('fake', 9600);
 		expect(function(){
 			tmp.on('serial', function(input, cb){});
 		}).to.not.throw();
@@ -141,7 +141,7 @@ describe('Open Connection', function(){
 	
 	it('should throw an error if the serialport connection can not be opened', function(){
 		expect(function(){
-			var tmp = new RFIDReader('fakeSerialPortAddress', 57600);
+			var tmp = new RFIDReader('fakeSerialPortAddress', 9600);
 			
 			tmp.listen();
 			
@@ -159,7 +159,7 @@ describe('Open Connection', function(){
 			tmp.listen(function(err){
 				expect(err).to.be.null;
 				tmp.close(function(err){
-					console.log("Error closing serial port: ", err);
+					if(err) console.log("Error closing serial port: ", err);
 					done();
 				});
 			});
@@ -169,7 +169,7 @@ describe('Open Connection', function(){
 	
 	it('should, if the "open event" is defined, call the open event on a successful serial port connection', function(done){
 		expect(function(){
-			var tmp = new RFIDReader(COM_PORT, 57600);
+			var tmp = new RFIDReader(COM_PORT, 9600);
 			
 			tmp.on('read', function(result){
 				
@@ -178,7 +178,7 @@ describe('Open Connection', function(){
 			tmp.on('open', function(){
 				expect.ok;
 				tmp.close(function(err){
-					console.log("Error closing serial port: ", err);
+					if(err) console.log("Error closing serial port: ", err);
 					done();
 				});
 			});
@@ -207,7 +207,12 @@ describe('Response from the RFID card', function(){
 			});
 		});
 		
-		reader.listen();
+		reader.listen(function(err){
+			if(err){
+				console.log("Error opening the serial port: ", err);
+				done();
+			}
+		});
 		
 	});
 	
@@ -217,26 +222,32 @@ describe('Serial Parsing', function(){
 	
 	it('should call the on("serial") on a RFID card event', function(done){
 		console.log("Please use the card on the reader");
-		var reader = new RFIDReader(COM_PORT, 57600);
+		var reader = new RFIDReader(COM_PORT, 9600);
 		
 		reader.on('serial', function(input, cb){
-			expect.to.be.ok;
-			reader.close(function(err){ console.log("Error closing serial port: ", err); });
-			done();
+			reader.close(function(err){
+				if(err) console.log("Error closing serial port: ", err);
+				done();
+			});
 		});
 		
 		reader.on('read', function(input){
 			
 		});
 		
-		reader.listen();
+		reader.listen(function(err){
+			if(err){
+				console.log("Error opening the serial port: ", err);
+				done();
+			}
+		});
 		
 	});
 	
 	it('should, by default, parse a string and trim spaces / new line characters', function(done){
-		var tmp = new RFIDReader(COM_PORT, 57600);
+		var tmp = new RFIDReader(COM_PORT, 9600);
 		
-		tmp.events.serial(' abcdefgh_5 ', function(err, parsed){
+		tmp.events.serial(' abcdefgh_5 \r\n', function(err, parsed){
 			expect(err).to.be.null;
 			expect(parsed).to.be.equal('abcdefgh_5');
 			done();
@@ -249,7 +260,7 @@ describe('On RFID Token', function(){
 	
 	it('should call the read event on an RFID token read', function(done){
 		console.log("Please use the card on the reader");
-		var reader = new RFIDReader(COM_PORT, 57600);
+		var reader = new RFIDReader(COM_PORT, 9600);
 		
 		reader.on('read', function(input){
 			expect(input).to.be.ok;
