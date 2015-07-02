@@ -1,6 +1,6 @@
 {
   "name": "serial-rfid-reader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A wrapper library to easily incorporate serial RFID readers (such as Sparkfun's 215khz, used for this lib) into a node program.",
   "main": "index.js",
   "scripts": {
