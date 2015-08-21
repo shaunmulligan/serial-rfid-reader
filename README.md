@@ -45,3 +45,8 @@ There are three events you can subscribe to.
 ## node-serialport
 
 This module makes use of node-serialport. This is a massive pain to compile on windows machines, so I suggest mozying on over to [their github page](https://github.com/voodootikigod/node-serialport). They have several excellent explanations there and on their wiki page that will help the install process.
+
+## node-webkit
+Building node-serialport for NW is a pain on windows- moreso when its a sub-module. [I wrote a helpful gist specifically for node-serialport](https://gist.github.com/hlfshell/3526882d232f7eee214e), but can act as a helpful guide for building serial-rfid-reader for packaged NW apps.
+
+[Here's an example of what I built with this module](https://blog.fusiondigital.io/office-wide-rfid-powered-nerf-war-274813506796).
